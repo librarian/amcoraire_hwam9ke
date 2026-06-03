@@ -1,0 +1,34 @@
+{
+  "name": "AmcorAire HW-AM9KE ESPHome",
+  "image": "ghcr.io/esphome/esphome:stable",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "containerEnv": {
+    "PLATFORMIO_CORE_DIR": "${containerWorkspaceFolder}/.cache/platformio"
+  },
+  "postCreateCommand": "mkdir -p .cache/platformio && esphome version",
+  "forwardPorts": [6052],
+  "portsAttributes": {
+    "6052": {
+      "label": "ESPHome Dashboard",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esphome.esphome-vscode",
+        "ms-vscode.cpptools",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "files.associations": {
+          "*.yaml": "yaml",
+          "*.yml": "yaml",
+          "*.h": "cpp",
+          "*.cpp": "cpp"
+        },
+        "yaml.validate": true
+      }
+    }
+  }
+}
