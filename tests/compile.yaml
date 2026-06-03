@@ -1,0 +1,18 @@
+esphome:
+  name: amcoraire-hwam9ke-ci
+
+esp8266:
+  board: esp8285
+
+logger:
+
+external_components:
+  - source:
+      type: local
+      path: ../components
+    components: [amcoraire_hwam9ke]
+
+climate:
+  - platform: amcoraire_hwam9ke
+    name: "AmcorAire AC"
+    pin: 4

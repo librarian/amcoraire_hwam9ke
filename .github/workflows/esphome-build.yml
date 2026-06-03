@@ -1,0 +1,41 @@
+name: ESPHome build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  compile-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Restore ESPHome build cache
+        uses: actions/cache@v5.0.5
+        with:
+          path: |
+            .cache/platformio
+            tests/.esphome
+          key: ${{ runner.os }}-esphome-${{ hashFiles('tests/compile.yaml', 'components/**') }}
+          restore-keys: |
+            ${{ runner.os }}-esphome-
+
+      - name: Compile ESPHome test config
+        run: |
+          mkdir -p .cache/platformio
+          docker run --rm \
+            -v "$PWD":/config \
+            -v "$PWD/.cache/platformio":/cache/platformio \
+            -e PLATFORMIO_CORE_DIR=/cache/platformio \
+            -w /config \
+            ghcr.io/esphome/esphome:stable \
+            compile tests/compile.yaml
+
+      - name: Fix cache permissions
+        if: always()
+        run: sudo chown -R "$USER:$USER" .cache tests/.esphome || true
